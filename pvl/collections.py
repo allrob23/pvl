@@ -99,7 +99,7 @@ class KeysView(MappingView):
 class ItemsView(MappingView):
     def __contains__(self, item):
         key, value = item
-        return value in self._mapping.getlist(key)
+        return value in self._mapping._getall_set(key)
 
     def __iter__(self):
         for item in self._mapping:
@@ -280,6 +280,12 @@ class OrderedMultiDict(dict, MutableMappingSequence):
         Returns KeyError if the key doesn't exist.
         """
         return list(dict_getitem(self, key))
+
+    def _getall_set(self, key) -> abc.Sequence:
+        """Returns a set of all the values for a named field.
+        Returns KeyError if the key doesn't exist.
+        """
+        return set(dict_getitem(self, key))
 
     def getlist(self, key) -> abc.Sequence:
         """Returns a list of all the values for the named field.
